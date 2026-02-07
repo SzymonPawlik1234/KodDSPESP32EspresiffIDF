@@ -1,0 +1,62 @@
+/*
+ * SPDX-FileCopyrightText: 2024 Espressif Systems (Shanghai) CO LTD
+ *
+ * SPDX-License-Identifier: Apache-2.0
+ */
+#pragma once
+#ifdef __cplusplus
+extern "C" {
+#endif
+#include "uac_descriptors.h"
+
+//------------- CLASS -------------//
+#define CFG_TUD_AUDIO             1
+
+//--------------------------------------------------------------------
+// AUDIO CLASS DRIVER CONFIGURATION
+//--------------------------------------------------------------------
+#define CFG_TUD_AUDIO_ENABLE_FEEDBACK_EP                             1
+
+#if CONFIG_UAC_SUPPORT_MACOS
+#define CFG_TUD_AUDIO_ENABLE_FEEDBACK_FORMAT_CORRECTION              1
+#endif
+
+#define CFG_TUD_AUDIO_FUNC_1_DESC_LEN                                TUD_AUDIO_DEVICE_DESC_LEN
+
+// How many formats are used, need to adjust USB descriptor if changed
+#define CFG_TUD_AUDIO_FUNC_1_N_FORMATS                               1
+#define CFG_TUD_AUDIO_FUNC_1_MAX_SAMPLE_RATE                         48000  // Tymczasowo wróć do 48kHz
+#define CFG_TUD_AUDIO_FUNC_1_N_CHANNELS_TX                           2
+#define CFG_TUD_AUDIO_FUNC_1_N_CHANNELS_RX                           MIC_CHANNEL_NUM
+
+// 16bit in 16bit slots
+#define CFG_TUD_AUDIO_FUNC_1_FORMAT_1_N_BYTES_PER_SAMPLE_TX          2
+#define CFG_TUD_AUDIO_FUNC_1_FORMAT_1_RESOLUTION_TX                  16
+#define CFG_TUD_AUDIO_FUNC_1_FORMAT_1_N_BYTES_PER_SAMPLE_RX          2
+#define CFG_TUD_AUDIO_FUNC_1_FORMAT_1_RESOLUTION_RX                  16
+
+// EP and buffer size - for isochronous EP´s, the buffer and EP size are equal
+#define CFG_TUD_AUDIO_ENABLE_EP_IN                1
+
+// MIC - Zaktualizowane dla 48kHz (tymczasowo)
+#define CFG_TUD_AUDIO_FUNC_1_FORMAT_1_EP_SZ_IN    ((48000 / 1000 * CFG_TUD_AUDIO_FUNC_1_FORMAT_1_N_BYTES_PER_SAMPLE_RX * CFG_TUD_AUDIO_FUNC_1_N_CHANNELS_RX) + 4)
+#define CFG_TUD_AUDIO_FUNC_1_EP_IN_SW_BUF_SZ      CFG_TUD_AUDIO_FUNC_1_FORMAT_1_EP_SZ_IN * (MIC_INTERVAL_MS + 1)
+#define CFG_TUD_AUDIO_FUNC_1_EP_IN_SZ_MAX         CFG_TUD_AUDIO_FUNC_1_FORMAT_1_EP_SZ_IN
+
+// EP and buffer size - for isochronous EP´s, the buffer and EP size are equal
+#define CFG_TUD_AUDIO_ENABLE_EP_OUT               1
+
+// SPK +4 for audio feedback - Zaktualizowane dla 48kHz (tymczasowo)
+#define CFG_TUD_AUDIO_FUNC_1_FORMAT_1_EP_SZ_OUT   ((48000 / 1000 * CFG_TUD_AUDIO_FUNC_1_FORMAT_1_N_BYTES_PER_SAMPLE_TX * CFG_TUD_AUDIO_FUNC_1_N_CHANNELS_TX) + 4)
+#define CFG_TUD_AUDIO_FUNC_1_EP_OUT_SW_BUF_SZ     CFG_TUD_AUDIO_FUNC_1_FORMAT_1_EP_SZ_OUT * (SPK_INTERVAL_MS + 1)
+#define CFG_TUD_AUDIO_FUNC_1_EP_OUT_SZ_MAX        CFG_TUD_AUDIO_FUNC_1_FORMAT_1_EP_SZ_OUT
+
+// Number of Standard AS Interface Descriptors
+#define CFG_TUD_AUDIO_FUNC_1_N_AS_INT             1
+
+// Size of control request buffer
+#define CFG_TUD_AUDIO_FUNC_1_CTRL_BUF_SZ    64
+
+#ifdef __cplusplus
+}
+#endif

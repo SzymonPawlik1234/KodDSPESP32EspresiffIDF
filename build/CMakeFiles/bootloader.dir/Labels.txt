@@ -1,0 +1,13 @@
+# Target labels
+ bootloader
+# Source files and their labels
+C:/Users/Bob PC/Desktop/Praceprog/ESPProj/i2s_usb2/build/CMakeFiles/bootloader
+C:/Users/Bob PC/Desktop/Praceprog/ESPProj/i2s_usb2/build/CMakeFiles/bootloader.rule
+C:/Users/Bob PC/Desktop/Praceprog/ESPProj/i2s_usb2/build/CMakeFiles/bootloader-complete.rule
+C:/Users/Bob PC/Desktop/Praceprog/ESPProj/i2s_usb2/build/bootloader-prefix/src/bootloader-stamp/bootloader-build.rule
+C:/Users/Bob PC/Desktop/Praceprog/ESPProj/i2s_usb2/build/bootloader-prefix/src/bootloader-stamp/bootloader-configure.rule
+C:/Users/Bob PC/Desktop/Praceprog/ESPProj/i2s_usb2/build/bootloader-prefix/src/bootloader-stamp/bootloader-download.rule
+C:/Users/Bob PC/Desktop/Praceprog/ESPProj/i2s_usb2/build/bootloader-prefix/src/bootloader-stamp/bootloader-install.rule
+C:/Users/Bob PC/Desktop/Praceprog/ESPProj/i2s_usb2/build/bootloader-prefix/src/bootloader-stamp/bootloader-mkdir.rule
+C:/Users/Bob PC/Desktop/Praceprog/ESPProj/i2s_usb2/build/bootloader-prefix/src/bootloader-stamp/bootloader-patch.rule
+C:/Users/Bob PC/Desktop/Praceprog/ESPProj/i2s_usb2/build/bootloader-prefix/src/bootloader-stamp/bootloader-update.rule
