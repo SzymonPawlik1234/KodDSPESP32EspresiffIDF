@@ -68,8 +68,6 @@ enum {
 #else
 #error "SPEAK_CHANNEL_NUM and MIC_CHANNEL_NUM cannot both be 0"
 #endif
-
-// Zmień definicje na bardziej kompatybilne
 #if SPEAK_CHANNEL_NUM && MIC_CHANNEL_NUM
 #define TUD_AUDIO_DESC_CS_AC_TOTAL_LEN ( \
     TUD_AUDIO_DESC_CLK_SRC_LEN\
@@ -79,8 +77,6 @@ enum {
     +TUD_AUDIO_DESC_INPUT_TERM_LEN\
     +TUD_AUDIO_DESC_OUTPUT_TERM_LEN\
     +TUD_AUDIO_DESC_MIC_FEATURE_UNIT_N_CHANNEL_LEN)
-
-// Zmniejsz rozmiar deskryptora dla kompatybilności
 #define TUD_AUDIO_DEVICE_DESC_LEN (TUD_AUDIO_DESC_IAD_LEN\
     + TUD_AUDIO_DESC_STD_AC_LEN\
     + TUD_AUDIO_DESC_CS_AC_LEN\
@@ -93,7 +89,6 @@ enum {
     + TUD_AUDIO_DESC_TYPE_I_FORMAT_LEN\
     + TUD_AUDIO_DESC_STD_AS_ISO_EP_LEN\
     + TUD_AUDIO_DESC_CS_AS_ISO_EP_LEN\
-    + TUD_AUDIO_DESC_STD_AS_ISO_FB_EP_LEN\
     /* Interface 2, Alternate 0 */\
     + TUD_AUDIO_DESC_STD_AS_INT_LEN\
     /* Interface 2, Alternate 1 */\
@@ -101,7 +96,8 @@ enum {
     + TUD_AUDIO_DESC_CS_AS_INT_LEN\
     + TUD_AUDIO_DESC_TYPE_I_FORMAT_LEN\
     + TUD_AUDIO_DESC_STD_AS_ISO_EP_LEN\
-    + TUD_AUDIO_DESC_CS_AS_ISO_EP_LEN)
+    + TUD_AUDIO_DESC_CS_AS_ISO_EP_LEN\
+    + TUD_AUDIO_DESC_STD_AS_ISO_FB_EP_LEN)
 #define TUD_AUDIO_DESCRIPTOR(_itfnum, _stridx, _epout, _epin, _epfb)  TUD_AUDIO_MIC_SPEAK_DESCRIPTOR(_itfnum, _stridx, _epout, _epin, _epfb)
 #elif MIC_CHANNEL_NUM
 #define TUD_AUDIO_DESC_CS_AC_TOTAL_LEN ( \

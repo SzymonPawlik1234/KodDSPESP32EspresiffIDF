@@ -35,7 +35,8 @@ tusb_desc_device_t const desc_device = {
     .bDescriptorType    = TUSB_DESC_DEVICE,
     .bcdUSB             = 0x0200,
 
-    // Use Interface Association Descriptor (IAD) for Audio
+    // Use Interface Association Descriptor (IAD) for CDC
+    // As required by USB Specs IAD's subclass must be common class (2) and protocol must be IAD (1)
     .bDeviceClass       = TUSB_CLASS_MISC,
     .bDeviceSubClass    = MISC_SUBCLASS_COMMON,
     .bDeviceProtocol    = MISC_PROTOCOL_IAD,
@@ -62,26 +63,16 @@ uint8_t const *tud_descriptor_device_cb(void)
 //--------------------------------------------------------------------+
 // Configuration Descriptor
 //--------------------------------------------------------------------+
-
-// Użyj poprawnej definicji z uac_descriptors.h
-#define CONFIG_TOTAL_LEN    (TUD_CONFIG_DESC_LEN + CFG_TUD_AUDIO_FUNC_1_DESC_LEN)
-
+#define CONFIG_TOTAL_LEN        (TUD_CONFIG_DESC_LEN + CFG_TUD_AUDIO * TUD_AUDIO_DEVICE_DESC_LEN)
 #define EPNUM_AUDIO_OUT   0x01
 #define EPNUM_AUDIO_FB    0x81
 #define EPNUM_AUDIO_IN    0x82
 
 uint8_t const desc_configuration[] = {
     // Config number, interface count, string index, total length, attribute, power in mA
-    TUD_CONFIG_DESCRIPTOR(1, ITF_NUM_TOTAL, 0, CONFIG_TOTAL_LEN, TUSB_DESC_CONFIG_ATT_REMOTE_WAKEUP, 100),
-    
-    // Audio Interface - Użyj poprawnego makra deskryptora
-#if SPEAK_CHANNEL_NUM && MIC_CHANNEL_NUM
-    TUD_AUDIO_MIC_SPEAK_DESCRIPTOR(ITF_NUM_AUDIO_CONTROL, 0, EPNUM_AUDIO_OUT, EPNUM_AUDIO_IN, EPNUM_AUDIO_FB),
-#elif SPEAK_CHANNEL_NUM
-    TUD_AUDIO_SPEAK_DESCRIPTOR(ITF_NUM_AUDIO_CONTROL, 0, EPNUM_AUDIO_OUT, EPNUM_AUDIO_FB),
-#elif MIC_CHANNEL_NUM
-    TUD_AUDIO_MIC_DESCRIPTOR(ITF_NUM_AUDIO_CONTROL, 0, EPNUM_AUDIO_IN),
-#endif
+    TUD_CONFIG_DESCRIPTOR(1, ITF_NUM_TOTAL, 0, CONFIG_TOTAL_LEN, 0x00, 100),
+    // Interface number, string index, EP Out & EP In address, EP size
+    TUD_AUDIO_DESCRIPTOR(ITF_NUM_AUDIO_CONTROL, 4, EPNUM_AUDIO_OUT, EPNUM_AUDIO_IN, EPNUM_AUDIO_FB),
 };
 
 // Invoked when received GET CONFIGURATION DESCRIPTOR
@@ -100,15 +91,15 @@ uint8_t const *tud_descriptor_configuration_cb(uint8_t index)
 // array of pointer to string descriptors
 char const *string_desc_arr [] = {
     (const char[]) { 0x09, 0x04 },  // 0: is supported language is English (0x0409)
-    CONFIG_UAC_TUSB_MANUFACTURER,   // 1: Manufacturer
-    CONFIG_UAC_TUSB_PRODUCT,        // 2: Product
-    CONFIG_UAC_TUSB_SERIAL_NUM,     // 3: Serials, should use chip ID
-    "UAC Control",                  // 4: UAC control Interface
+    CONFIG_UAC_TUSB_MANUFACTURER,       // 1: Manufacturer
+    CONFIG_UAC_TUSB_PRODUCT,            // 2: Product
+    CONFIG_UAC_TUSB_SERIAL_NUM,         // 3: Serials, should use chip ID
+    "usb uac",                      // 4: UAC control Interface
 #if SPEAK_CHANNEL_NUM
-    "UAC Speaker",                  // 5: Speaker Interface
+    "speaker",                     // 5: Speak Interface
 #endif
 #if MIC_CHANNEL_NUM
-    "UAC Microphone",               // 6: Microphone Interface
+    "microphone",                   // 6: Mic Interface
 #endif
 };
 
@@ -139,7 +130,6 @@ uint16_t const *tud_descriptor_string_cb(uint8_t index, uint16_t langid)
             chr_count = 31;
         }
 
-        // Convert ASCII string into UTF-16
         for (uint8_t i = 0; i < chr_count; i++) {
             _desc_str[1 + i] = str[i];
         }

@@ -4,9 +4,11 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 #pragma once
+
 #ifdef __cplusplus
 extern "C" {
 #endif
+
 #include "sdkconfig.h"
 
 #define SPEAK_CHANNEL_NUM    CONFIG_UAC_SPEAKER_CHANNEL_NUM  /*!< SPEAKER */
@@ -15,12 +17,7 @@ extern "C" {
 #define SPK_INTERVAL_MS      CONFIG_UAC_SPK_INTERVAL_MS      /*!< READ INTERVAL in ms*/
 #define MIC_INTERVAL_MS      CONFIG_UAC_MIC_INTERVAL_MS      /*!< WRITE INTERVAL in ms*/
 
-// Tymczasowo tylko 48kHz dla kompatybilności
-#define SUPPORTED_SAMPLE_RATES {48000}
-
 #define IN_CTRL_CH_VALUE U32_TO_U8S_LE(AUDIO_CTRL_RW << AUDIO_FEATURE_UNIT_CTRL_MUTE_POS | AUDIO_CTRL_RW << AUDIO_FEATURE_UNIT_CTRL_VOLUME_POS)
-
-// ... reszta bez zmian
 
 #if SPEAK_CHANNEL_NUM == 1
 #define INPUT_CTRL      IN_CTRL_CH_VALUE, IN_CTRL_CH_VALUE

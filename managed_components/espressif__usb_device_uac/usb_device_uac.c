@@ -19,7 +19,7 @@
 
 static const char *TAG = "usbd_uac";
 
-const uint32_t sample_rates[] = SUPPORTED_SAMPLE_RATES;
+const uint32_t sample_rates[] = {DEFAULT_SAMPLE_RATE};
 
 #define N_SAMPLE_RATES  TU_ARRAY_SIZE(sample_rates)
 
@@ -166,32 +166,21 @@ static bool tud_audio_clock_get_request(uint8_t rhport, audio_control_request_t 
 static bool tud_audio_clock_set_request(uint8_t rhport, audio_control_request_t const *request, uint8_t const *buf)
 {
     (void)rhport;
+
     TU_ASSERT(request->bEntityID == UAC2_ENTITY_CLOCK);
     TU_VERIFY(request->bRequest == AUDIO_CS_REQ_CUR);
-    
+
     if (request->bControlSelector == AUDIO_CS_CTRL_SAM_FREQ) {
         TU_VERIFY(request->wLength == sizeof(audio_control_cur_4_t));
+
         uint32_t target_sample_rate = (uint32_t)((audio_control_cur_4_t const *)buf)->bCur;
         TU_LOG1("Clock set current freq: %ld\r\n", target_sample_rate);
-        
-        // Sprawdź czy sample rate jest wspierany
-        bool supported = false;
-        for (int i = 0; i < N_SAMPLE_RATES; i++) {
-            if (sample_rates[i] == target_sample_rate) {
-                supported = true;
-                break;
-            }
-        }
-        
-        if (supported && target_sample_rate != s_uac_device->current_sample_rate) {
-            s_uac_device->current_sample_rate = target_sample_rate;
-            // Tutaj możesz dodać callback do zmiany konfiguracji I2S
-            TU_LOG1("Sample rate changed to: %lu\r\n", target_sample_rate);
-            return true;
-        } else if (!supported) {
-            TU_LOG1("Sample rate not supported: %lu\r\n", target_sample_rate);
+
+        if (target_sample_rate != s_uac_device->current_sample_rate) {
+            // For now, we only support one sample rate
             return false;
         }
+
         return true;
     } else {
         TU_LOG1("Clock set request not supported, entity = %u, selector = %u, request = %u\r\n",
